@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Button, Platform, StyleSheet, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -51,6 +52,17 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+
+      <View style={{ marginVertical: 4, gap: 4 }}>
+        <Button title="New Tweet" onPress={() => router.push('/screens/new-tweet')} />
+      </View>
+      <View style={{ marginVertical: 4, gap: 4 }}>
+        <Button title="Tweet" onPress={() => router.push('/screens/tweet')} />
+      </View>
+      <View style={{ marginVertical: 4, gap: 4 }}>
+        <Button title="Profile" onPress={() => router.push('/screens/profile')} />
+      </View>
+
     </ParallaxScrollView>
   );
 }
