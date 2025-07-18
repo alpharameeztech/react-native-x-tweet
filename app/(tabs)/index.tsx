@@ -4,10 +4,40 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Button, Platform, StyleSheet } from 'react-native';
-
+import { Button, FlatList, Platform, StyleSheet, TouchableOpacity, View, } from 'react-native';
 export default function HomeScreen() {
   const router = useRouter();
+  const DATA = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'First Item',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Second Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Third Item',
+    },
+  ];
+
+  function goToProfile (){
+    router.push('profile');
+  }
+  const Item = ({ title }) => (
+    <View style={styles.tweetContainer}>
+      <TouchableOpacity onPress={() => goToProfile()}>
+        <Image
+        style={styles.avatar} 
+        source={{
+          uri: 'https://reactnative.dev/img/tiny_logo.png'
+        }} />
+      </TouchableOpacity>
+      <ThemedText>{title}</ThemedText>
+    </View>
+  );
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -21,11 +51,23 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
         <Button title="Go to Profile" onPress={() => router.push('/profile')} />
         <Button title="View Tweet" onPress={() => router.push('/tweet')} />
         <Button title="Compose New Tweet" onPress={() => router.push('/new-tweet')} />
-      </ThemedView>
+      </View>
+
+      <FlatList
+        data={DATA}
+        renderItem={({item}) => 
+          <>
+          <Item title={item.title} />
+          <Item title={item.title} />
+          </>
+        }
+        keyExtractor={item => item.id}
+      />
+      
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
@@ -78,4 +120,18 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+  container:{
+    flex:1, alignItems: 'center', justifyContent: 'center'
+  },
+  tweetContainer:{
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 12
+  },
+  avatar:{
+    width: 40,
+    height: 40,
+    marginRight: 8,
+    borderRadius: 10
+  }
 });
