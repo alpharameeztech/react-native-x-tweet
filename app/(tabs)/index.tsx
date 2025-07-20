@@ -1,10 +1,9 @@
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Button, FlatList, Platform, StyleSheet, TouchableOpacity, View, } from 'react-native';
+import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
   const router = useRouter();
   const DATA = [
@@ -25,6 +24,14 @@ export default function HomeScreen() {
   function goToProfile (){
     router.push('profile');
   }
+
+  function goToSingleTweet (){
+    router.push('tweet');
+  }
+
+  function goToNewTweet(){
+    router.push('/new-tweet');
+  }
   const Item = ({ title }) => (
     <View style={styles.tweetContainer}>
       <TouchableOpacity onPress={() => goToProfile()}>
@@ -34,72 +41,74 @@ export default function HomeScreen() {
           uri: 'https://reactnative.dev/img/tiny_logo.png'
         }} />
       </TouchableOpacity>
-      <ThemedText>{title}</ThemedText>
+      <View style={{ flex:1 }}>
+        <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile()}>
+          <ThemedText numberOfLines={1} style={styles.tweetName}>{title}</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetHandle}>@admire</ThemedText>
+          <ThemedText>&middot;</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetHandle}>9m</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet()}>
+          <ThemedText style={styles.tweetContent}>
+            loreim ipisum loreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisum
+          </ThemedText>
+        </TouchableOpacity>
+        
+        <View style={styles.tweetEngagement}>
+          <TouchableOpacity style={styles.flexRow}>
+            <ThemedText>
+              <EvilIcons name="comment" size={24} color="gray" />
+            </ThemedText>
+            <ThemedText style={styles.textGray}>456</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
+            <ThemedText>
+              <EvilIcons name="retweet" size={24} color="gray" />
+            </ThemedText>
+            <ThemedText style={styles.textGray}>456</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
+            <ThemedText>
+              <EvilIcons name="heart" size={24} color="gray" />
+            </ThemedText>
+            <ThemedText style={styles.textGray}>188</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
+            <ThemedText>
+              <EvilIcons name={Platform.OS === 'ios'? 'share-apple' : 'share-google'} size={24} color="gray" />
+            </ThemedText>
+            <ThemedText style={styles.textGray}>188</ThemedText>
+          </TouchableOpacity>
+          
+        </View>
+      </View>
+      
     </View>
   );
   
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-        <Button title="Go to Profile" onPress={() => router.push('/profile')} />
-        <Button title="View Tweet" onPress={() => router.push('/tweet')} />
-        <Button title="Compose New Tweet" onPress={() => router.push('/new-tweet')} />
-      </View>
-
+    <View style={{ flex: 1, position: 'relative' }}>
       <FlatList
         data={DATA}
         renderItem={({item}) => 
           <>
           <Item title={item.title} />
-          <Item title={item.title} />
           </>
         }
         keyExtractor={item => item.id}
+        ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
       />
-      
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+      <TouchableOpacity
+       style={styles.floatingButton}
+       onPress={() => goToNewTweet()}
+      >
+        <AntDesign name="plus" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -133,5 +142,48 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 8,
     borderRadius: 10
+  },
+  flexRow:{
+    flexDirection: 'row'
+  },
+  tweetName:{
+    fontWeight: 'bold',
+    color: '#222222'
+  },
+  tweetHandle:{
+    marginHorizontal: 8,
+    color: 'gray'
+  },
+  tweetContentContainer:{
+    marginTop: 4,
+  },
+  tweetSeparator:{
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb'
+  },
+  tweetContent:{
+    lineHeight: 20
+  },
+  textGray: {
+    color: 'gray',
+  },
+  tweetEngagement:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12
+  },
+  ml4:{
+    marginLeft: 16
+  },
+  floatingButton:{
+    width:60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1d9bf1',
+    position: 'absolute',
+    bottom: 100,
+    right: 12,
   }
 });
