@@ -1,18 +1,48 @@
 import { ThemedText } from '@/components/ThemedText';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 export default function NewTweetScreen() {
+  const router = useRouter();
+  
+  const [tweet,setTweet] = useState('');
+
+  function sendTweet(){
+    router.push('/');
+  }
+
   return (
     <View style={styles.container}>
      <View style={styles.tweetButtonContainer}>
-      <ThemedText>
-        Character left: 280
+      <ThemedText style={tweet.length > 250 ? styles.textRed : styles.textGray}> 
+        Character left: {280 - tweet.length}
       </ThemedText>
-      <TouchableOpacity style={styles.tweetButton}>
+      <TouchableOpacity onPress={() => sendTweet()} style={styles.tweetButton}>
         <ThemedText style={styles.tweetButtonText}>
-          Character left: 280
+          Tweet
         </ThemedText>
       </TouchableOpacity>
      </View>
+
+    <View style={styles.tweetBoxContainer}>
+      <Image
+          style={styles.avatar} 
+          source={{
+            uri: 'https://reactnative.dev/img/tiny_logo.png'
+          }} />
+
+          <TextInput 
+            style={styles.input}
+            onChangeText={setTweet}
+            value={tweet}
+            placeholder='Whats happening...'
+            placeholderTextColor="gray"
+            maxLength={280}
+            multiline
+          />
+    </View>
+
     </View>
   );
 }
@@ -21,21 +51,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 10
   },
-  textColor:{
+  textGray:{
     color: 'gray'
+  },
+  textRed:{
+    color: 'red',
   },
   ml4:{
     marginLeft: 16
   },
-  followButton:{
-    backgroundColor: '#0f1418',
+  avatar:{
+    width: 40,
+    height: 40,
+    marginRight: 8,
+    borderRadius: 10
+  },
+  tweetButtonContainer:{
+    flexDirection: 'row',
+    paddingHorizontal: 4,
+    paddingVertical: 6,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  tweetButton:{
+    backgroundColor: '#1d9bf1',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 24
   },
-  followButtonText: {
+  tweetButtonText: {
    color: 'white',
    fontWeight: 'bold'
+  },
+
+  tweetBoxContainer: {
+    flexDirection: 'row', paddingTop: 10,
+  },
+  avatar: {
+    width: 42, height: 42, marginRight: 8, marginTop: 10, borderRadius: 21,
+  },
+  input:{
+    flex:1,
+    fontSize: 18,
+    lineHeight: 28, 
+    padding: 10,
   }
 });
