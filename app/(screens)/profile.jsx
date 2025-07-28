@@ -1,10 +1,30 @@
 import { ThemedText } from '@/components/ThemedText';
 import { EvilIcons } from '@expo/vector-icons';
-import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
-  return (
-    <View style={styles.container}>
+  const DATA = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'First Item',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Second Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Third Item',
+    },
+  ];
+  const Item = ({ title }) => (
+    <View style={{ marginVertical: 20}}>
+      <ThemedText> {title}</ThemedText>      
+    </View>
+  );
+
+  const ProfileHeader = () => (
+<View style={styles.container}>
       <Image
           style={styles.backgroundImage} 
           source={{
@@ -76,7 +96,26 @@ export default function ProfileScreen() {
       <View style={styles.separator}></View>
 
       
+      
+    
     </View>
+  );
+  
+  return (
+    <FlatList
+      style={styles.container}
+      data={DATA}
+      renderItem={({item}) => 
+        <>
+        <Item title={item.title} />
+        </>
+      }
+      keyExtractor={item => item.id}
+        ItemSeparatorComponent={()=> <View style={styles.separator}></View>
+      }
+    ListHeaderComponent={ProfileHeader}
+  />
+
   );
 }
 
