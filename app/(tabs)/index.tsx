@@ -1,25 +1,44 @@
 import { ThemedText } from '@/components/ThemedText';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
+import axios from 'axios';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
   const router = useRouter();
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
+
+  const [data, setData] = useState([]);
+
+  useEffect(() =>{
+    getAllTweets()
+  }, [])
+
+  function getAllTweets(){
+    axios.get('http://127.0.0.1:8000/api/tweets')
+    .then(response => {
+        setData(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
+  // const DATA = [
+  //   {
+  //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+  //     title: 'First Item',
+  //   },
+  //   {
+  //     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+  //     title: 'Second Item',
+  //   },
+  //   {
+  //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
+  //     title: 'Third Item',
+  //   },
+  // ];
 
   function goToProfile (){
     router.push('profile');
@@ -32,25 +51,25 @@ export default function HomeScreen() {
   function goToNewTweet(){
     router.push('/new-tweet');
   }
-  const Item = ({ title }) => (
+  const Item = ({ item }) => (
     <View style={styles.tweetContainer}>
       <TouchableOpacity onPress={() => goToProfile()}>
         <Image
         style={styles.avatar} 
         source={{
-          uri: 'https://reactnative.dev/img/tiny_logo.png'
+          uri: item.user.avatar
         }} />
       </TouchableOpacity>
       <View style={{ flex:1 }}>
         <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile()}>
-          <ThemedText numberOfLines={1} style={styles.tweetName}>{title}</ThemedText>
-          <ThemedText numberOfLines={1} style={styles.tweetHandle}>@admire</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetName}>{item.user.name}</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetHandle}>{item.user.username}</ThemedText>
           <ThemedText>&middot;</ThemedText>
           <ThemedText numberOfLines={1} style={styles.tweetHandle}>9m</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet()}>
           <ThemedText style={styles.tweetContent}>
-            loreim ipisum loreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisumloreim ipisum
+            {item.body}
           </ThemedText>
         </TouchableOpacity>
         
@@ -92,10 +111,10 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <FlatList
-        data={DATA}
+        data={data}
         renderItem={({item}) => 
           <>
-          <Item title={item.title} />
+          <Item item={item} /> 
           </>
         }
         keyExtractor={item => item.id}
