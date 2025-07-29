@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import axios from 'axios';
+import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -24,21 +25,6 @@ export default function HomeScreen() {
       console.log(error)
     })
   }
-
-  // const DATA = [
-  //   {
-  //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-  //     title: 'First Item',
-  //   },
-  //   {
-  //     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-  //     title: 'Second Item',
-  //   },
-  //   {
-  //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-  //     title: 'Third Item',
-  //   },
-  // ];
 
   function goToProfile (){
     router.push('profile');
@@ -65,7 +51,9 @@ export default function HomeScreen() {
           <ThemedText numberOfLines={1} style={styles.tweetName}>{item.user.name}</ThemedText>
           <ThemedText numberOfLines={1} style={styles.tweetHandle}>{item.user.username}</ThemedText>
           <ThemedText>&middot;</ThemedText>
-          <ThemedText numberOfLines={1} style={styles.tweetHandle}>9m</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetHandle}>
+            {formatDistanceToNowStrict(new Date(item.created_at))}
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet()}>
           <ThemedText style={styles.tweetContent}>
