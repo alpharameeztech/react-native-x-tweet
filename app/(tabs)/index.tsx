@@ -7,6 +7,8 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import formatDistance from '../../helpers/formatDistanceCustom';
+
 export default function HomeScreen() {
   const router = useRouter();
 
@@ -49,11 +51,14 @@ export default function HomeScreen() {
       <View style={{ flex:1 }}>
         <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile()}>
           <ThemedText numberOfLines={1} style={styles.tweetName}>{item.user.name}</ThemedText>
-          <ThemedText numberOfLines={1} style={styles.tweetHandle}>{item.user.username}</ThemedText>
+          <ThemedText numberOfLines={1} style={styles.tweetHandle}>@{item.user.username}</ThemedText>
           <ThemedText>&middot;</ThemedText>
           <ThemedText numberOfLines={1} style={styles.tweetHandle}>
-            {formatDistanceToNowStrict(new Date(item.created_at))}
-          </ThemedText>
+          {formatDistanceToNowStrict(new Date(item.created_at), {
+            addSuffix: true,
+            locale: { formatDistance },
+          })}
+        </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet()}>
           <ThemedText style={styles.tweetContent}>
