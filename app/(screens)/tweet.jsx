@@ -31,8 +31,16 @@ export default function TweetScreen() {
         <ThemedText style={styles.tweetContent}>
             loreum ipsum loreum ipsumloreum  ipsumloreumipsumloreumipsumloreumipsumloreumipsumloreum ipsumloloreum ipsumloreum ipsumloreum ipsum reum ipsum
         </ThemedText>
-      </View>
 
+        <View style={styles. tweetTimestampContainer} >
+          <ThemedText style={styles. tweetTimestampText}>10:33 a.m</ThemedText>
+          <ThemedText style={styles.tweetTimestampText}>&middot;</ThemedText>
+          <ThemedText style={styles. tweetTimestampText}>18 Sep.21</ThemedText>
+          <ThemedText style={styles. tweetTimestampText}>&middot; </ThemedText>
+          <ThemedText style={[styles. tweetTimestampText, styles.linkColorl]}> Twitter for iPhone</ThemedText>
+        </View>
+      
+      </View>
       <View style={styles.tweetEngagement}>
         <View style={styles.flexRow}>
           <ThemedText style={styles.tweetEngagementNumber}>
@@ -151,5 +159,18 @@ const styles = StyleSheet.create({
   },
   spaceAround:{
     justifyContent: 'space-around'
+  },
+
+  tweetTimestampContainer: {
+    flexDirection: 'row', 
+    marginTop: 12,
+    paddingHorizontal: 20
+  },
+  tweetTimestampText: {
+    color: 'gray',
+    marginRight: 6,
+  },
+  linkColor: {
+   color: '#1d9bf1'
   }
 })
