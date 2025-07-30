@@ -6,14 +6,14 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import formatDistance from '../../helpers/formatDistanceCustom';
 
 export default function HomeScreen() {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() =>{
     getAllTweets()
   }, [])
@@ -21,10 +21,12 @@ export default function HomeScreen() {
   function getAllTweets(){
     axios.get('http://127.0.0.1:8000/api/tweets')
     .then(response => {
-        setData(response.data)
+        setData(response.data);
+        setIsLoading(false);
     })
     .catch(error => {
-      console.log(error)
+      console.log(error);
+      setIsLoading(false);
     })
   }
 
@@ -103,6 +105,10 @@ export default function HomeScreen() {
   
   return (
     <View style={{ flex: 1, position: 'relative' }}>
+      {isLoading}
+      {isLoading ? (
+      <ActivityIndicator style={{marginTop:10}} size="large" />
+      ):(
       <FlatList
         data={data}
         renderItem={({item}) => 
@@ -113,6 +119,7 @@ export default function HomeScreen() {
         keyExtractor={item => item.id}
         ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
       />
+      )}
 
       <TouchableOpacity
        style={styles.floatingButton}
