@@ -15,15 +15,21 @@ export default function HomeScreen() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() =>{
     getAllTweets()
-  }, [])
+  }, [page])
 
   function getAllTweets(){
-    axios.get('http://127.0.0.1:8000/api/tweets')
+    axios.get(`http://127.0.0.1:8000/api/tweets?page=${page}`)
     .then(response => {
-        setData(response.data);
+        if(page == 1){
+          setData(response.data.data);
+        } else{
+          setData([...data, ...response.data.data])
+        }
+       
         setIsLoading(false);
         setIsRefreshing(false);
     })
@@ -37,6 +43,10 @@ export default function HomeScreen() {
   function handleRefresh(){
     setIsRefreshing(true);
     getAllTweets();
+  }
+
+  function handleEnd(){
+    setPage(page + 1);
   }
 
   function goToProfile (){
@@ -129,6 +139,11 @@ export default function HomeScreen() {
         ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
+        onEndReached={handleEnd}
+        onEndReachedThreshold={0}
+        ListFooterComponent={() => (
+          <ActivityIndicator size="large" color="gray" />
+        )}
       />
       )}
 
