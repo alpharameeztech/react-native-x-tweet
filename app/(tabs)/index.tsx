@@ -14,6 +14,8 @@ export default function HomeScreen() {
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   useEffect(() =>{
     getAllTweets()
   }, [])
@@ -23,11 +25,18 @@ export default function HomeScreen() {
     .then(response => {
         setData(response.data);
         setIsLoading(false);
+        setIsRefreshing(false);
     })
     .catch(error => {
       console.log(error);
       setIsLoading(false);
+      setIsRefreshing(false);
     })
+  }
+
+  function handleRefresh(){
+    setIsRefreshing(true);
+    getAllTweets();
   }
 
   function goToProfile (){
@@ -118,6 +127,8 @@ export default function HomeScreen() {
         }
         keyExtractor={item => item.id}
         ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
       />
       )}
 
