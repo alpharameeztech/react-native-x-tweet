@@ -16,6 +16,7 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(1);
+  const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
 
   useEffect(() =>{
     getAllTweets()
@@ -29,7 +30,11 @@ export default function HomeScreen() {
         } else{
           setData([...data, ...response.data.data])
         }
-       
+        
+        if(!response.data.next_page_url){
+           setIsAtEndOfScrolling(true); 
+        }
+        
         setIsLoading(false);
         setIsRefreshing(false);
     })
@@ -41,6 +46,8 @@ export default function HomeScreen() {
   }
 
   function handleRefresh(){
+    setPage(1);
+    setIsAtEndOfScrolling(false);
     setIsRefreshing(true);
     getAllTweets();
   }
@@ -141,7 +148,7 @@ export default function HomeScreen() {
         onRefresh={handleRefresh}
         onEndReached={handleEnd}
         onEndReachedThreshold={0}
-        ListFooterComponent={() => (
+        ListFooterComponent={() => !isAtEndOfScrolling && (
           <ActivityIndicator size="large" color="gray" />
         )}
       />
