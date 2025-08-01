@@ -1,11 +1,11 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Entypo, EvilIcons } from '@expo/vector-icons';
-import axios from 'axios';
 import { format } from 'date-fns';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import axiosConfig from '../../../helpers/axiosConfig';
 
 export default function TweetScreen() {
 const { tweetId } = useLocalSearchParams();
@@ -17,7 +17,7 @@ getTweet()
 }, [])
 
 function getTweet(){
-axios.get(`http://127.0.0.1:8000/api/tweets/${tweetId}`)
+  axiosConfig.get(`/tweets/${tweetId}`)
 .then(response => {
     
   setTweet(response.data)

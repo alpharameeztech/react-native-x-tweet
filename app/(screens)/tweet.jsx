@@ -6,6 +6,10 @@ import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function TweetScreen() {
   return (
     <View style={styles.container}>
+       {isLoading ? (
+      <ActivityIndicator style={{marginTop:10}} size="large" />
+      ):(
+        <>
       <View style={styles.profileContainer}>
         <TouchableOpacity style={styles.flexRow}>
           <Image
@@ -96,6 +100,8 @@ export default function TweetScreen() {
             />
           </TouchableOpacity>
       </View>
+      </>
+      )}
       
     </View>
   );

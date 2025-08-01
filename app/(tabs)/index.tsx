@@ -1,12 +1,13 @@
 import { ThemedText } from '@/components/ThemedText';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
-import axios from 'axios';
+
 import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import axiosConfig from '../../helpers/axiosConfig';
 import formatDistance from '../../helpers/formatDistanceCustom';
 
 export default function HomeScreen() {
@@ -23,7 +24,7 @@ export default function HomeScreen() {
   }, [page])
 
   function getAllTweets(){
-    axios.get(`http://127.0.0.1:8000/api/tweets?page=${page}`)
+    axiosConfig.get(`/tweets?page=${page}`)
     .then(response => {
         if(page == 1){
           setData(response.data.data);
