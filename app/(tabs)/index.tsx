@@ -60,8 +60,8 @@ export default function HomeScreen() {
     router.push('profile');
   }
 
-  function goToSingleTweet (){
-    router.push('tweet');
+  function goToSingleTweet(tweetId){
+    router.push(`/tweet/${tweetId}`);
   }
 
   function goToNewTweet(){
@@ -88,7 +88,7 @@ export default function HomeScreen() {
           })}
         </ThemedText>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet()}>
+        <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet(item.id)}>
           <ThemedText style={styles.tweetContent}>
             {item.body}
           </ThemedText>
@@ -131,7 +131,6 @@ export default function HomeScreen() {
   
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      {isLoading}
       {isLoading ? (
       <ActivityIndicator style={{marginTop:10}} size="large" />
       ):(
