@@ -3,13 +3,25 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import axiosConfig from '../../helpers/axiosConfig';
 export default function NewTweetScreen() {
   const router = useRouter();
   
   const [tweet,setTweet] = useState('');
-
+  const [isLoading, setIsLoading] = useState(true);
+  
   function sendTweet(){
-    router.push('/');
+    axiosConfig.post(`/tweets`,{
+      'body': tweet
+    })
+    .then(response => {
+        setIsLoading(false);
+        router.push('home')
+    })
+    .catch(error => {
+      console.log(error);
+      setIsLoading(false);
+    })
   }
 
   return (
