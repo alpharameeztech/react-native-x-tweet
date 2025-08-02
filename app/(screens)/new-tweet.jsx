@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 export default function NewTweetScreen() {
   const router = useRouter();
@@ -13,6 +13,12 @@ export default function NewTweetScreen() {
   function sendTweet(){
 
     setIsLoading(true);
+
+    if(tweet.length === 0){
+      setIsLoading(false);
+      Alert.alert('Please type some tweet');
+      return;
+    }
     
     axiosConfig.post(`/tweets`,{
       'body': tweet
@@ -37,7 +43,7 @@ export default function NewTweetScreen() {
         {isLoading && (
           <ActivityIndicator size="small" style={{marginRight:8}} />
         )}
-        <TouchableOpacity onPress={() => sendTweet()} style={styles.tweetButton}>
+        <TouchableOpacity onPress={() => sendTweet()} style={styles.tweetButton} disabled={isLoading}>
           <ThemedText style={styles.tweetButtonText}>
             Tweet
           </ThemedText>
