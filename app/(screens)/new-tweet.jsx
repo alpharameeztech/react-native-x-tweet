@@ -2,21 +2,24 @@ import { ThemedText } from '@/components/ThemedText';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 export default function NewTweetScreen() {
   const router = useRouter();
   
   const [tweet,setTweet] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
   function sendTweet(){
+
+    setIsLoading(true);
+    
     axiosConfig.post(`/tweets`,{
       'body': tweet
     })
     .then(response => {
         setIsLoading(false);
-        router.push('home')
+        router.push('profile');
     })
     .catch(error => {
       console.log(error);
@@ -30,11 +33,16 @@ export default function NewTweetScreen() {
       <ThemedText style={tweet.length > 250 ? styles.textRed : styles.textGray}> 
         Character left: {280 - tweet.length}
       </ThemedText>
-      <TouchableOpacity onPress={() => sendTweet()} style={styles.tweetButton}>
-        <ThemedText style={styles.tweetButtonText}>
-          Tweet
-        </ThemedText>
-      </TouchableOpacity>
+      <View style={{ flexDirection:'row', alignItems: 'center'}}>
+        {isLoading && (
+          <ActivityIndicator size="small" style={{marginRight:8}} />
+        )}
+        <TouchableOpacity onPress={() => sendTweet()} style={styles.tweetButton}>
+          <ThemedText style={styles.tweetButtonText}>
+            Tweet
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
      </View>
 
     <View style={styles.tweetBoxContainer}>
