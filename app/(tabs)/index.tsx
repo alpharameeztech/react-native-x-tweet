@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 import formatDistance from '../../helpers/formatDistanceCustom';
-
 export default function HomeScreen() {
   const router = useRouter();
 
@@ -88,8 +87,11 @@ export default function HomeScreen() {
     setPage(page + 1);
   }
 
-  function goToProfile (){
-    router.push('profile');
+  function goToProfile(userId){
+    router.push({
+      pathname: '/profile/[userId]',
+      params: { userId }
+    });
   }
 
   function goToSingleTweet(tweetId){
@@ -101,7 +103,7 @@ export default function HomeScreen() {
   }
   const Item = ({ item }) => (
     <View style={styles.tweetContainer}>
-      <TouchableOpacity onPress={() => goToProfile()}>
+      <TouchableOpacity onPress={() => goToProfile(item.user.id)}>
         <Image
         style={styles.avatar} 
         source={{
@@ -109,7 +111,7 @@ export default function HomeScreen() {
         }} />
       </TouchableOpacity>
       <View style={{ flex:1 }}>
-        <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile()}>
+        <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile(item.user.id)}>
           <ThemedText numberOfLines={1} style={styles.tweetName}>{item.user.name}</ThemedText>
           <ThemedText numberOfLines={1} style={styles.tweetHandle}>@{item.user.username}</ThemedText>
           <ThemedText>&middot;</ThemedText>
