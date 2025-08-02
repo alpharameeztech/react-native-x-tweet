@@ -5,7 +5,7 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 import formatDistance from '../../helpers/formatDistanceCustom';
@@ -18,11 +18,19 @@ export default function HomeScreen() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(1);
   const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
+  const flatListRef = useRef(null);
 
   const { newTweetAdded } = useLocalSearchParams();
 
   useEffect(() => {
     getAllTweetsRefresh();
+
+    setTimeout(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+    }, 100); 
+
   }, [newTweetAdded]);
 
   useEffect(() =>{
@@ -31,7 +39,7 @@ export default function HomeScreen() {
   
   function getAllTweetsRefresh(){
     setPage(1);
-    setIsLoading(true);
+    setIsAtEndOfScrolling(false);
     setIsRefreshing(true);
     axiosConfig.get(`/tweets`)
     .then(response => {
@@ -159,6 +167,7 @@ export default function HomeScreen() {
       <ActivityIndicator style={{marginTop:10}} size="large" />
       ):(
       <FlatList
+        ref={flatListRef}
         data={data}
         renderItem={({item}) => 
           <>
