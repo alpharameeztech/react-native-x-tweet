@@ -25,7 +25,10 @@ export default function NewTweetScreen() {
     })
     .then(response => {
         setIsLoading(false);
-        router.push('profile');
+        router.push({
+          pathname: '/',
+          params: { newTweetAdded: JSON.stringify(response.data) }
+        });
     })
     .catch(error => {
       console.log(error);

@@ -4,7 +4,7 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
@@ -19,9 +19,32 @@ export default function HomeScreen() {
   const [page, setPage] = useState(1);
   const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
 
+  const { newTweetAdded } = useLocalSearchParams();
+
+  useEffect(() => {
+    getAllTweetsRefresh();
+  }, [newTweetAdded]);
+
   useEffect(() =>{
     getAllTweets()
   }, [page])
+  
+  function getAllTweetsRefresh(){
+    setPage(1);
+    setIsLoading(true);
+    setIsRefreshing(true);
+    axiosConfig.get(`/tweets`)
+    .then(response => {
+        setData(response.data.data);
+        setIsLoading(false);
+        setIsRefreshing(false);
+    })
+    .catch(error => {
+      console.log(error);
+      setIsLoading(false);
+      setIsRefreshing(false);
+    })
+  }
 
   function getAllTweets(){
     axiosConfig.get(`/tweets?page=${page}`)
