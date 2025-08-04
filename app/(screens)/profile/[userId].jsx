@@ -37,7 +37,18 @@ export default function ProfileScreen() {
   useEffect(() => {
     getUserProfile()
     getUserTweets()
-  }, []);
+  }, [page]);
+
+  function handleRefresh(){
+    setPage(1);
+    setIsAtEndOfScrolling(false);
+    setIsRefreshing(true);
+    getUserTweets();
+  }
+
+  function handleEnd(){
+    setPage(page + 1);
+  }
 
   function getUserProfile(){
     axiosConfig.get(`/users/${userId}`)
@@ -58,7 +69,7 @@ export default function ProfileScreen() {
       </View>
   );
   function getUserTweets(){
-    axiosConfig.get(`/users/${userId}/tweets`)
+    axiosConfig.get(`/users/${userId}/tweets?page=${page}`)
         .then(response => {
           if(page === 1){
             setData(response.data.data);
@@ -178,14 +189,16 @@ export default function ProfileScreen() {
                 </>
             }
             keyExtractor={item => item.id}
-            ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
+            ItemSeparatorComponent={()=> <View style={styles.separator}></View>}
             refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            onEndReached={handleEnd}
             onEndReachedThreshold={0}
             ListFooterComponent={() => !isAtEndOfScrolling && (
                 <ActivityIndicator size="large" color="gray" />
             )}
             ListHeaderComponent={ProfileHeader}
-
+            scrollIndicatorInsets={{ right: 1 }}
         />
       )}
       </View>
