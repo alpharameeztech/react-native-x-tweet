@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 import formatDistance from '../../helpers/formatDistanceCustom';
+import RenderItem from "@/components/RenderItem";
+
 export default function HomeScreen() {
   const router = useRouter();
 
@@ -87,82 +89,11 @@ export default function HomeScreen() {
     setPage(page + 1);
   }
 
-  function goToProfile(userId){
-    router.push({
-      pathname: '/profile/[userId]',
-      params: { userId }
-    });
-  }
-
-  function goToSingleTweet(tweetId){
-    router.push(`/tweet/${tweetId}`);
-  }
 
   function goToNewTweet(){
     router.push('/new-tweet');
   }
-  const Item = ({ item }) => (
-    <View style={styles.tweetContainer}>
-      <TouchableOpacity onPress={() => goToProfile(item.user.id)}>
-        <Image
-        style={styles.avatar} 
-        source={{
-          uri: item.user.avatar
-        }} />
-      </TouchableOpacity>
-      <View style={{ flex:1 }}>
-        <TouchableOpacity style={styles.flexRow} onPress={() => goToProfile(item.user.id)}>
-          <ThemedText numberOfLines={1} style={styles.tweetName}>{item.user.name}</ThemedText>
-          <ThemedText numberOfLines={1} style={styles.tweetHandle}>@{item.user.username}</ThemedText>
-          <ThemedText>&middot;</ThemedText>
-          <ThemedText numberOfLines={1} style={styles.tweetHandle}>
-          {formatDistanceToNowStrict(new Date(item.created_at), {
-            addSuffix: true,
-            locale: { formatDistance },
-          })}
-        </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tweetContentContainer} onPress={() => goToSingleTweet(item.id)}>
-          <ThemedText style={styles.tweetContent}>
-            {item.body}
-          </ThemedText>
-        </TouchableOpacity>
-        
-        <View style={styles.tweetEngagement}>
-          <TouchableOpacity style={styles.flexRow}>
-            <ThemedText>
-              <EvilIcons name="comment" size={24} color="gray" />
-            </ThemedText>
-            <ThemedText style={styles.textGray}>456</ThemedText>
-          </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
-            <ThemedText>
-              <EvilIcons name="retweet" size={24} color="gray" />
-            </ThemedText>
-            <ThemedText style={styles.textGray}>456</ThemedText>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
-            <ThemedText>
-              <EvilIcons name="heart" size={24} color="gray" />
-            </ThemedText>
-            <ThemedText style={styles.textGray}>188</ThemedText>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.flexRow, styles.ml4]}>
-            <ThemedText>
-              <EvilIcons name={Platform.OS === 'ios'? 'share-apple' : 'share-google'} size={24} color="gray" />
-            </ThemedText>
-            <ThemedText style={styles.textGray}>188</ThemedText>
-          </TouchableOpacity>
-          
-        </View>
-      </View>
-      
-    </View>
-  );
-  
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       {isLoading ? (
@@ -171,9 +102,9 @@ export default function HomeScreen() {
       <FlatList
         ref={flatListRef}
         data={data}
-        renderItem={({item}) => 
+        renderItem={({item}) =>
           <>
-          <Item item={item} /> 
+          <RenderItem item={item} />
           </>
         }
         keyExtractor={item => item.id}
