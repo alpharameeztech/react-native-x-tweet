@@ -2,12 +2,21 @@ import { ThemedText } from '@/components/ThemedText';
 import { EvilIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import { ActivityIndicator, FlatList, Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../../helpers/axiosConfig';
+import RenderItem from "@/components/RenderItem";
+
 export default function ProfileScreen() {
     const [user,setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [data, setData] = useState([]);
+    const [isLoadingTweets, setIsLoadingTweets] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [page, setPage] = useState(1);
+    const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
+    const flatListRef = useRef(null);
   const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -27,14 +36,15 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     getUserProfile()
+    getUserTweets()
   }, []);
 
   function getUserProfile(){
     axiosConfig.get(`/users/${userId}`)
     .then(response => {
-        
+
       setUser(response.data)
-       
+
       setIsLoading(false);
     })
     .catch(error => {
@@ -42,12 +52,34 @@ export default function ProfileScreen() {
       setIsLoading(false);
     })
   }
-
   const Item = ({ title }) => (
-    <View style={{ marginVertical: 20}}>
-      <ThemedText> {title}</ThemedText>      
-    </View>
+      <View style={{ marginVertical: 20}}>
+        <ThemedText> {title}</ThemedText>
+      </View>
   );
+  function getUserTweets(){
+    axiosConfig.get(`/users/${userId}/tweets`)
+        .then(response => {
+          if(page === 1){
+            setData(response.data.data);
+          } else{
+            setData([...data, ...response.data.data])
+          }
+
+          if(!response.data.next_page_url){
+            setIsAtEndOfScrolling(true);
+          }
+
+          setIsLoadingTweets(false);
+          setIsRefreshing(false);
+        })
+        .catch(error => {
+          console.log(error);
+          setIsLoadingTweets(false);
+          setIsRefreshing(false);
+        })
+  }
+
 
   const ProfileHeader = () => (
     <View style={styles.container}>
@@ -132,20 +164,25 @@ export default function ProfileScreen() {
   );
   
   return (
-    <FlatList
-      style={styles.container}
-      data={DATA}
-      renderItem={({item}) => 
-        <>
-        <Item title={item.title} />
-        </>
-      }
-      keyExtractor={item => item.id}
-        ItemSeparatorComponent={()=> <View style={styles.separator}></View>
-      }
-    ListHeaderComponent={ProfileHeader}
-  />
+      <FlatList
+          style={styles.container}
+          ref={flatListRef}
+          data={data}
+          renderItem={({item}) =>
+              <>
+                <RenderItem item={item} />
+              </>
+          }
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
+          refreshing={isRefreshing}
+          onEndReachedThreshold={0}
+          ListFooterComponent={() => !isAtEndOfScrolling && (
+              <ActivityIndicator size="large" color="gray" />
+          )}
+          ListHeaderComponent={ProfileHeader}
 
+      />
   );
 }
 
@@ -202,7 +239,7 @@ const styles = StyleSheet.create({
   },
   profileHandle: {
     color: 'gray',
-    marginTop: 1 
+    marginTop: 1
   },
 
   profileContainer: {
