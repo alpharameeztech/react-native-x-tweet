@@ -164,25 +164,31 @@ export default function ProfileScreen() {
   );
   
   return (
-      <FlatList
-          style={styles.container}
-          ref={flatListRef}
-          data={data}
-          renderItem={({item}) =>
-              <>
-                <RenderItem item={item} />
-              </>
-          }
-          keyExtractor={item => item.id}
-          ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
-          refreshing={isRefreshing}
-          onEndReachedThreshold={0}
-          ListFooterComponent={() => !isAtEndOfScrolling && (
-              <ActivityIndicator size="large" color="gray" />
-          )}
-          ListHeaderComponent={ProfileHeader}
+      <View style={styles.container}>
+        {isLoading ? (
+            <ActivityIndicator style={{marginTop:10}} size="large" />
+        ):(
+        <FlatList
+            style={styles.container}
+            ref={flatListRef}
+            data={data}
+            renderItem={({item}) =>
+                <>
+                  <RenderItem item={item} />
+                </>
+            }
+            keyExtractor={item => item.id}
+            ItemSeparatorComponent={()=> <View style={styles.tweetSeparator}></View>}
+            refreshing={isRefreshing}
+            onEndReachedThreshold={0}
+            ListFooterComponent={() => !isAtEndOfScrolling && (
+                <ActivityIndicator size="large" color="gray" />
+            )}
+            ListHeaderComponent={ProfileHeader}
 
-      />
+        />
+      )}
+      </View>
   );
 }
 
