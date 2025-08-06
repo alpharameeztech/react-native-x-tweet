@@ -1,17 +1,39 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {ActivityIndicator, Platform, View} from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { AuthContext } from '../(screens)/context/AuthProvider';
+import {ThemedText} from "@/components/ThemedText";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+    const [isLoading, setIsLoading] = useState(true);
+    const { user, setUser } = useContext(AuthContext);
+    useEffect(() => {
+        // check if user is logged in or not.
+        // Check SecureStore for the user object/token
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }, []);
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <ActivityIndicator size="large" color="gray" />
+            </View>
+        );
+    }
+
   return (
+      <>
+          {user ? (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -41,5 +63,11 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+      ):(
+        <View>
+            <ThemedText>Login</ThemedText>
+        </View>
+      )}
+      </>
   );
 }

@@ -5,6 +5,7 @@ import { Drawer } from 'expo-router/drawer';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { AuthProvider } from '../app/(screens)/context/AuthProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -19,6 +20,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AuthProvider>
        <GestureHandlerRootView style={{ flex: 1 }}>
        <Drawer>
           <Drawer.Screen
@@ -32,6 +34,7 @@ export default function RootLayout() {
         </Drawer>
     </GestureHandlerRootView>
       <StatusBar style="auto" />
+    </AuthProvider>
     </ThemeProvider>
   );
 }
