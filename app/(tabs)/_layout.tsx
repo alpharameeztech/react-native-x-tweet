@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React, {useContext, useEffect, useState} from 'react';
-import {ActivityIndicator, Platform, View} from 'react-native';
+import {ActivityIndicator, Platform, SafeAreaView, View} from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -8,7 +8,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthContext } from '../(screens)/context/AuthProvider';
-import {ThemedText} from "@/components/ThemedText";
+import LoginScreen from "@/app/(screens)/Auth/LoginScreen";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -64,9 +64,9 @@ export default function TabLayout() {
       />
     </Tabs>
       ):(
-        <View>
-            <ThemedText>Login</ThemedText>
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <LoginScreen />
+        </SafeAreaView>
       )}
       </>
   );
