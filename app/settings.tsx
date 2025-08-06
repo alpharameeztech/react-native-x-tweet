@@ -1,11 +1,14 @@
 import { Stack } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
-
+import {Button, StyleSheet, Text, View} from 'react-native';
+import { AuthContext } from './(screens)/context/AuthProvider';
+import {useContext} from "react";
 export default function SettingsScreen() {
+  const { logout } = useContext(AuthContext);
   return (
     <>
       <Stack.Screen options={{ title: 'Settings' }} />
       <View style={styles.container}>
+        <Button title="Logout" onPress={logout} />
         <Text style={styles.heading}>Settings</Text>
         <Text style={styles.item}>• Account</Text>
         <Text style={styles.item}>• Notifications</Text>
