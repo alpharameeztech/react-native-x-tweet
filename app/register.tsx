@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Button } from 'react-native';
-import { ThemedText } from "../../../components/ThemedText";
+
 import { useRouter } from 'expo-router';
+import {ThemedText} from "@/components/ThemedText";
 
 export default function RegisterScreen() {
     const router = useRouter();
