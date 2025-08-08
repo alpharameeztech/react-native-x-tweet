@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthContext } from '../(screens)/context/AuthProvider';
 import LoginScreen from "@/app/(screens)/Auth/LoginScreen";
+import * as SecureStore from 'expo-secure-store';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -18,9 +19,22 @@ export default function TabLayout() {
     useEffect(() => {
         // check if user is logged in or not.
         // Check SecureStore for the user object/token
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
+        // setTimeout(() => {
+        //     setIsLoading(false);
+        // }, 2000);
+
+        SecureStore.getItemAsync('user')
+            .then(userString => {
+                if (userString) {
+                    setUser(JSON.parse(userString));
+                }
+                setIsLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+                setIsLoading(false);
+        });
+
     }, []);
 
     if (isLoading) {

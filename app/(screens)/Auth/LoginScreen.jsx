@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, Button, SafeAreaView } from 'react-native';
+import {View, TextInput, Button, SafeAreaView, ActivityIndicator} from 'react-native';
 import { AuthContext } from '../context/AuthProvider';
 import { ThemedText } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useContext(AuthContext);
+    const { login, error, isLoading } = useContext(AuthContext);
     const router = useRouter();
 
     return (
@@ -52,6 +52,11 @@ export default function LoginScreen() {
 
                 <Button onPress={() => login(email, password)} title="Login" />
                 <Button onPress={() => router.push('/register')} title="Go to Register Screen" />
+
+                {error && <ThemedText style={{ color: 'red' }}>{error}</ThemedText>}
+                {isLoading && (
+                    <ActivityIndicator style={{ marginTop: 8 }} size="small" color="gray" />
+                )}
             </View>
         </SafeAreaView>
     );

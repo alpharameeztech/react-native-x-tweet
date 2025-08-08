@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import { AuthContext } from './(screens)/context/AuthProvider';
+
 import {useContext} from "react";
 export default function SettingsScreen() {
   const { logout } = useContext(AuthContext);
