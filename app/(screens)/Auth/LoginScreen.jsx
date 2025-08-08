@@ -63,7 +63,7 @@ export default function LoginScreen() {
                     >
                         <ThemedText style={styles.registerText}>Don't have an account?</ThemedText>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Register Screen')}
+                            onPress={() => router.push('/register')}
                         >
                             <ThemedText style={styles.registerTextLink}> Register</ThemedText>
                         </TouchableOpacity>
