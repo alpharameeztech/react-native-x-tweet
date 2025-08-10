@@ -1,15 +1,17 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import { ActivityIndicator, Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
+import {AuthContext} from "./context/AuthProvider";
 export default function NewTweetScreen() {
   const router = useRouter();
   
   const [tweet,setTweet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+  const { user } = useContext(AuthContext);
+
   function sendTweet(){
 
     setIsLoading(true);
@@ -19,7 +21,11 @@ export default function NewTweetScreen() {
       Alert.alert('Please type some tweet');
       return;
     }
-    
+
+    axiosConfig.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${user.token}`;
+
     axiosConfig.post(`/tweets`,{
       'body': tweet
     })
@@ -39,7 +45,7 @@ export default function NewTweetScreen() {
   return (
     <View style={styles.container}>
      <View style={styles.tweetButtonContainer}>
-      <ThemedText style={tweet.length > 250 ? styles.textRed : styles.textGray}> 
+      <ThemedText style={tweet.length > 250 ? styles.textRed : styles.textGray}>
         Character left: {280 - tweet.length}
       </ThemedText>
       <View style={{ flexDirection:'row', alignItems: 'center'}}>
