@@ -46,7 +46,9 @@ export const AuthProvider = ({ children }) => {
                         })
                         .catch(error => {
                             console.log(error.response);
-                            setError(error.response.data.message);
+                            //setError(error.response.data.message);
+                            const key = Object.keys(error.response.data.errors)[0];
+                            setError(error.response.data.errors[key][0]);
                             setIsLoading(false);
                         });
                 },

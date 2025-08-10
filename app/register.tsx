@@ -7,10 +7,11 @@ import {
     ActivityIndicator,
     StyleSheet,
     Alert,
-    Image,
+
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import {ThemedText} from "@/components/ThemedText";
+import axiosConfig from "@/helpers/axiosConfig";
 
 export default function RegisterScreen() {
     const [name, setName] = useState('');
@@ -24,7 +25,33 @@ export default function RegisterScreen() {
     const router = useRouter();
 
     function register(email, username, password, confirmPassword) {
-        Alert.alert('Register Logic here');
+        if (name.length < 1) {
+            Alert.alert('Please enter a name');
+            return;
+        }
+
+        setIsLoading(true);
+        axiosConfig
+            .post('/register', {
+                name,
+                email,
+                username,
+                password,
+                password_confirmation: confirmPassword,
+            })
+            .then(response => {
+                Alert.alert('User created! Please login.');
+               router.push('/login');
+
+                setIsLoading(false);
+                setError(null);
+            })
+            .catch(error => {
+                console.log(error.response);
+                const key = Object.keys(error.response.data.errors)[0];
+                setError(error.response.data.errors[key][0]);
+                setIsLoading(false);
+            });
     }
 
     return (
