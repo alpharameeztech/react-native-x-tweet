@@ -5,11 +5,12 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import { ActivityIndicator, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import axiosConfig from '../../helpers/axiosConfig';
 import formatDistance from '../../helpers/formatDistanceCustom';
 import RenderItem from "@/components/RenderItem";
+import {AuthContext} from "@/app/(screens)/context/AuthProvider";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function HomeScreen() {
   const [page, setPage] = useState(1);
   const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
   const flatListRef = useRef(null);
+  const { user } = useContext(AuthContext);
 
   const { newTweetAdded } = useLocalSearchParams();
 
@@ -42,6 +44,11 @@ export default function HomeScreen() {
     setPage(1);
     setIsAtEndOfScrolling(false);
     setIsRefreshing(true);
+
+    axiosConfig.defaults.headers.common[
+        'Authorization'
+        ] = `Bearer ${user.token}`;
+
     axiosConfig.get(`/tweets`)
     .then(response => {
         setData(response.data.data);
@@ -56,6 +63,10 @@ export default function HomeScreen() {
   }
 
   function getAllTweets(){
+    axiosConfig.defaults.headers.common[
+        'Authorization'
+        ] = `Bearer ${user.token}`;
+
     axiosConfig.get(`/tweets?page=${page}`)
     .then(response => {
         if(page == 1){
