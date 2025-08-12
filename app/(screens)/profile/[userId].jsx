@@ -2,10 +2,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { EvilIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
-import {useEffect, useRef, useState} from 'react';
-import { ActivityIndicator, FlatList, Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {useContext, useEffect, useRef, useState} from 'react';
+import {ActivityIndicator, Alert, FlatList, Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
 import axiosConfig from '../../../helpers/axiosConfig';
 import RenderItem from "@/components/RenderItem";
+import {AuthContext} from "../context/AuthProvider";
 
 export default function ProfileScreen() {
     const [user,setUser] = useState(null);
@@ -17,27 +18,65 @@ export default function ProfileScreen() {
     const [page, setPage] = useState(1);
     const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
     const flatListRef = useRef(null);
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
-
-  const { userId } = useLocalSearchParams();
+    const [isFollowing, setIsFollowing] = useState(false);
+    const { user: userFromContext } = useContext(AuthContext);
+    const { userId } = useLocalSearchParams();
 
   useEffect(() => {
     getUserProfile()
     getUserTweets()
   }, [page]);
+
+    useEffect(() => {
+        getIsFollowing();
+    }, []);
+
+    function getIsFollowing() {
+        axiosConfig.defaults.headers.common[
+            'Authorization'
+            ] = `Bearer ${userFromContext.token}`;
+
+        axiosConfig
+            .get(`/is_following/${userId}`)
+            .then(response => {
+                setIsFollowing(response.data);
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    }
+
+    function followUser(userId) {
+        axiosConfig.defaults.headers.common[
+            'Authorization'
+            ] = `Bearer ${userFromContext.token}`;
+
+        axiosConfig
+            .post(`/follow/${userId}`)
+            .then(response => {
+                setIsFollowing(true);
+                Alert.alert('You are now following this user.');
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    }
+
+    function unfollowUser(userId) {
+        axiosConfig.defaults.headers.common[
+            'Authorization'
+            ] = `Bearer ${userFromContext.token}`;
+
+        axiosConfig
+            .post(`/unfollow/${userId}`)
+            .then(response => {
+                setIsFollowing(false);
+                Alert.alert('You are now unfollowing this user.');
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    }
 
   function handleRefresh(){
     setPage(1);
@@ -109,12 +148,29 @@ export default function ProfileScreen() {
           style={styles.avatar} 
           source={{
             uri: user.avatar
-        }} />  
-        <TouchableOpacity style={styles.followButton}>
-          <ThemedText style={styles.followButtonText}>
-          Follow
-        </ThemedText>
-        </TouchableOpacity>
+        }} />
+
+          {userFromContext.id != userId && (
+          <View>
+              {isFollowing ? (
+                  <TouchableOpacity
+                      style={styles.followButton}
+                      onPress={() => unfollowUser(userId)}
+                  >
+                      <ThemedText style={styles.followButtonText}>Unfollow</ThemedText>
+                  </TouchableOpacity>
+              ) : (
+                  <TouchableOpacity
+                      style={styles.followButton}
+                      onPress={() => followUser(userId)}
+                  >
+                      <ThemedText style={styles.followButtonText}>Follow</ThemedText>
+                  </TouchableOpacity>
+              )}
+          </View>
+
+          )}
+
       </View>
 
       <View style={styles.nameContainer}>
