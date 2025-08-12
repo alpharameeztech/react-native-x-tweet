@@ -24,6 +24,7 @@ export default function HomeScreen() {
   const { user } = useContext(AuthContext);
 
   const { newTweetAdded } = useLocalSearchParams();
+    const {tweetDeleted} = useLocalSearchParams();
 
   useEffect(() => {
     getAllTweetsRefresh();
@@ -34,7 +35,7 @@ export default function HomeScreen() {
       }
     }, 100); 
 
-  }, [newTweetAdded]);
+  }, [newTweetAdded, tweetDeleted]);
 
   useEffect(() =>{
     getAllTweets()
