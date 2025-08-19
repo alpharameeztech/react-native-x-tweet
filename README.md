@@ -1,50 +1,98 @@
-# Welcome to your Expo app 👋
+# Twitter X Mobile Clone
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile-first Twitter-like social media app built with React Native and Expo. This project offers a polished, high-fidelity Twitter experience for mobile devices, including all the core features you'd expect: registration, login, browsing the tweet feed, tweet details, engagement actions, and user account operations.
 
-## Get started
+---
 
-1. Install dependencies
+## Screenshots
 
-   ```bash
-   npm install
-   ```
+<p align="center">
+  <img src="assets/images/screenshots/login.png" alt="Login Screen" height="420" />
+  <img src="assets/images/screenshots/register.png" alt="Register Screen" height="420" />
+  <img src="assets/images/screenshots/feed.png" alt="Tweet Feed" height="420" />
+  <img src="assets/images/screenshots/tweet.png" alt="Tweet Detail" height="420" />
+  <img src="assets/images/screenshots/create.png" alt="Create Tweet" height="420" />
+  <img src="assets/images/screenshots/options.png" alt="Tweet Options" height="420" />
+  <img src="assets/images/screenshots/profile.png" alt="Profile Screen" height="420" />
+</p>
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+*Sample screenshots: Log in screen, registration, tweet timeline, tweet details, and the new tweet composer.*
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## What Does This Project Do?
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Twitter Feed Experience:** View, like, retweet, reply, and share posts in a familiar Twitter timeline.
+- **Tweet Details:** See tweet content, author profile, interaction counts (likes, retweets, quotes), detailed timestamps, and more.
+- **User Authentication:** Secure registration and login with JWT token storage. The app keeps users logged in securely via encrypted storage.
+- **User Actions:** Authenticated users can write, delete, and pin their tweets (actions such as deleting a tweet require confirmation).
+- **Navigation:** Smooth screen transitions thanks to Expo Router and modern React patterns.
+- **Mobile Ready:** Fully responsive for iOS and Android using React Native's core components and Expo's enhancement libraries.
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## Technology Stack
 
-```bash
-npm run reset-project
-```
+- **Frontend:**
+    - [React Native](https://reactnative.dev/) with [Expo](https://expo.dev/)
+    - [TypeScript](https://www.typescriptlang.org/)
+    - [React Navigation / Expo Router](https://expo.github.io/router/docs/)
+    - [Axios](https://axios-http.com/) for API requests
+    - [SecureStore (Expo)](https://docs.expo.dev/versions/latest/sdk/securestore/) for securely storing user tokens and session
+    - [Date-fns](https://date-fns.org/) for date handling
+    - [React Native Modalize](https://jeremybarbet.github.io/react-native-modalize/) for action sheets/modals
+    - Modern UI idioms and component structure
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Backend:**
+    - See [alpharameeztech/laravel-x-tweet-backend](https://github.com/alpharameeztech/laravel-x-tweet-backend) (Laravel + JWT Auth)  
+      This app requires the above Laravel API server running for signup, login, and tweet interactions.
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## Features
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Authentication:**  
+  Users can register with name, email, username, and password. Returning users can log in; secure authentication tokens are safely stored and used for all requests.
 
-## Join the community
+- **Tweet Timeline:**  
+  Browse a timeline/feed of tweets, see tweet details, view profiles.
 
-Join our community of developers creating universal apps.
+- **CRUD Operations:**  
+  Authenticated users can create, delete, and pin tweets. Confirmation dialogs are used to avoid accidental destructive actions.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Responsive Layout:**  
+  Works great on both iOS and Android devices.
+
+- **Engagement Actions:**  
+  Like, retweet, quote, and reply just like on Twitter.
+
+---
+
+## Getting Started
+
+1. **Install Dependencies**
+
+    ```bash
+    yarn install
+    # or
+    npm install
+    ```
+
+2. **Run the App**
+
+    ```bash
+    npx expo start
+    ```
+
+3. **Set up the Backend**
+
+   Make sure to follow backend installation steps at [laravel-x-tweet-backend](https://github.com/alpharameeztech/laravel-x-tweet-backend) and set API URL in the frontend as necessary.
+
+---
+
+## Learn More
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
+- [Full Backend Repo & API Docs](https://github.com/alpharameeztech/laravel-x-tweet-backend)
